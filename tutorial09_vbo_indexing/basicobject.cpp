@@ -84,12 +84,16 @@ void BasicObject::init()
 
     m_modelMatrix = glm::mat4(0.01,0,0,0, 0,0,0.01,0, 0,0.01,0,0,  0,-1,0,1);
     m_isInited = true;
-
+    m_modelMatrixNew = m_modelMatrix; //keep the original state
 }
 
+void BasicObject::transform(mat4& transform)
+{
+    m_modelMatrixNew = m_modelMatrix*transform;
+}
 void BasicObject::update(glm::mat4& pojection, glm::mat4& view, glm::vec3& light)
 {
-    glm::mat4 MVP = pojection * view * m_modelMatrix;
+    glm::mat4 MVP = pojection * view * m_modelMatrixNew;
     // Use our shader
     glUseProgram(m_programID);
 

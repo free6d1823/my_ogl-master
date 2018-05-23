@@ -114,8 +114,9 @@ Car   m_object1;
 		computeMatricesFromInputs2();
 		glm::mat4 ProjectionMatrix = getProjectionMatrix2();
 		glm::mat4 ViewMatrix = getViewMatrix2();
-		glm::vec3 lightPos = glm::vec3(4,4,4);		
-
+		glm::vec3 lightPos = glm::vec3(4,4,4);
+        glm::mat4 objectMatrix = getObjectMoveMat();		
+        m_object1.transform(objectMatrix);
 		////// Start of the rendering of the first object //////
 m_background.update(ProjectionMatrix, ViewMatrix, lightPos);
 m_background.draw();

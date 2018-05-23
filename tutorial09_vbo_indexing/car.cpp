@@ -82,14 +82,22 @@ void Car::init()
     glUseProgram(m_programID);
     m_lightID = glGetUniformLocation(m_programID, "LightPosition_worldspace");
 
-    m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, 0.0f));
+//    m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, 0.0f));
+    m_modelMatrix = glm::mat4(1.8,0,0,0,0,1.8,0,0,0,0,1.8,0,0,2,0,1);
+float angle = -0.8;
+    glm:mat4 rot = glm::mat4(cos(angle), 0.0, sin(angle), 0.0,
+				0.0,1.0,0,0.0,
+				-sin(angle), 0, cos(angle),0,
+				0,0,0,1);
+m_modelMatrix = m_modelMatrix* rot;
+    m_modelMatrixNew = mat4(m_modelMatrix); //keep the original state
     m_isInited = true;
 
 }
 
 void Car::update(glm::mat4& pojection, glm::mat4& view, glm::vec3& light)
 {
-    glm::mat4 MVP = pojection * view * m_modelMatrix;
+    glm::mat4 MVP = pojection * view * m_modelMatrixNew;
     // Use our shader
     glUseProgram(m_programID);
 
@@ -108,6 +116,10 @@ void Car::update(glm::mat4& pojection, glm::mat4& view, glm::vec3& light)
 
 }
 
+void Car::transform(mat4& transform)
+{
+    m_modelMatrixNew = m_modelMatrix*transform;
+}
 void Car::cleanup()
 {
     if (!m_isInited) {

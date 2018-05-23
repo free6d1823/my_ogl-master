@@ -34,6 +34,11 @@ float mouseSpeed = 0.005f;
 
 glm::vec3 posLookAt = glm::vec3( 0, 0, 0 );
 
+mat4 ObjectMatrix = mat4(0);
+mat4 getObjectMoveMat()
+{
+    return ObjectMatrix;
+}
 void computeMatricesFromInputs2(){
 	static int inited = 0;
 	if(inited == 0) {//Jammy fixed bug
@@ -83,6 +88,9 @@ void computeMatricesFromInputs2(){
 	if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS){
 		posLookAt.x -= 0.1;
 	}
+
+
+
 	posCam = radius*direction; 
 //printf("pos= %f,%f,%f\n", posCam.x, posCam.y, posCam.z);
 	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
@@ -96,6 +104,31 @@ void computeMatricesFromInputs2(){
 		glm::vec3(0,1,0)//up                  // Head is up (set to 0,-1,0 to look upside-down)
 	);
 
+static float fTx = 0;
+static float fRy = 0;
+
+    ObjectMatrix = mat4(0);
+	if (glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS){
+		fRy -= 0.01;
+	}
+	if (glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS){
+        fRy += 0.01;
+	}
+    if (glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS){
+            //car forward
+        fTx -= 0.01;
+    }
+    if (glfwGetKey( window, GLFW_KEY_X ) == GLFW_PRESS){
+        fTx += 0.01;
+    }
+    if (glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS){
+        fTx = 0; fRy = 0;
+    }
+    mat4 tx = mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,fTx,1);
+    ObjectMatrix = mat4(cos(fRy),0,sin(fRy), 0,
+                        0,       1,       0, 0,
+                        -sin(fRy),0,cos(fRy), 0, 
+                        0,0,0,1)* tx;
 	// For the next frame, the "last time" will be "now"
 	lastTime = currentTime;
 }

@@ -10,11 +10,15 @@ public:
     ~BasicObject();
     void init();
     void cleanup();
+	//update view mode
     void update(glm::mat4& pojection, glm::mat4& view, glm::vec3& light);
+	//transform object
+    void transform(mat4& transform);   
     void draw();
 
-private:
-    glm::mat4 m_modelMatrix;
+protected:
+    glm::mat4 m_modelMatrix; //the original object matrix
+    mat4 m_modelMatrixNew;  //after transformation
     bool m_isInited;
     GLuint m_vao, m_vboVertex, m_vboIndex;
     GLuint m_uvBuffer, m_normalBuffer;
